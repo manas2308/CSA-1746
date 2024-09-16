@@ -1,0 +1,15 @@
+% Define some facts for pattern matching
+person(name(john), 30).
+person(name(jane), 25).
+person(name(jack), 40).
+
+% Pattern matching rule
+match_pattern(Person, Age) :-
+    person(name(Person), Age).
+
+% Example queries:
+% To match a person with name 'john' and get their age:
+% ?- match_pattern(john, Age).
+
+% To find the name and age of a person who is 25 years old:
+% ?- match_pattern(Name, 25).

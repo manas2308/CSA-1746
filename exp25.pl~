@@ -1,0 +1,60 @@
+% Define initial state
+% state(MonkeyPosition, BoxPosition, BananaPosition, MonkeyHoldingBanana)
+% Positions: 'floor' or 'on_box'
+
+% Initial state: monkey on the floor, box on the floor, banana on the ceiling
+initial_state(state(floor, floor, ceiling, no)).
+
+% Goal state: monkey holding the banana
+goal_state(state(_, _, _, yes)).
+
+% Move the box to the location of the monkey
+move_box(state(MonkeyPosition, floor, BananaPosition, MonkeyHoldingBanana),
+         state(MonkeyPosition, MonkeyPosition, BananaPosition, MonkeyHoldingBanana)) :-
+    MonkeyPosition = floor.
+
+% Move the monkey to the box
+move_monkey(state(floor, BoxPosition, BananaPosition, MonkeyHoldingBanana),
+            state(on_box, BoxPosition, BananaPosition, MonkeyHoldingBanana)) :-
+    BoxPosition = floor.
+
+% Climb the box (monkey is already on the box)
+climb(state(on_box, BoxPosition, BananaPosition, MonkeyHoldingBanana),
+      state(on_box, BoxPosition, BananaPosition, MonkeyHoldingBanana)) :-
+    BananaPosition = ceiling.
+
+% Get the banana (monkey is on the box and the banana is on the ceiling)
+get_banana(state(on_box, BoxPosition, ceiling, no),
+           state(on_box, BoxPosition, ceiling, yes)).
+
+% Plan to achieve the goal
+plan(State, []) :-
+    goal_state(State).
+
+plan(State1, [Action | RestOfPlan]) :-
+    move(State1, State2),
+    Action = move(State1, State2),
+    plan(State2, RestOfPlan).
+
+plan(State1, [Action | RestOfPlan]) :-
+    move_monkey(State1, State2),
+    Action = move_monkey(State1, State2),
+    plan(State2, RestOfPlan).
+
+plan(State1, [Action | RestOfPlan]) :-
+    climb(State1, State2),
+    Action = climb(State1, State2),
+    plan(State2, RestOfPlan).
+
+plan(State1, [Action | RestOfPlan]) :-
+    get_banana(State1, State2),
+    Action = get_banana(State1, State2),
+    plan(State2, RestOfPlan).
+
+% Start planning from the initial state
+solve_plan(Plan) :-
+    initial_state(InitialState),
+    plan(InitialState, Plan).
+
+% Example query:
+% ?- solve_plan(Plan).

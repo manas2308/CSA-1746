@@ -1,0 +1,16 @@
+diet(diabetes, 'Vegetables', 'Sugary foods').
+diet(diabetes, 'Whole grains', 'Refined carbs').
+diet(diabetes, 'Lean proteins', 'Sweets').
+diet(hypertension, 'Leafy greens', 'Salt').
+diet(hypertension, 'Berries', 'Caffeine').
+diet(hypertension, 'Oats', 'Processed foods').
+diet(heart_disease, 'Fatty fish', 'Trans fats').
+diet(heart_disease, 'Nuts', 'Saturated fats').
+diet(heart_disease, 'Fruits', 'Processed meats').
+diet(obesity, 'Fruits and vegetables', 'Fast food').
+diet(obesity, 'Lean proteins', 'Sugary drinks').
+diet(obesity, 'Whole grains', 'Snacks').
+suggest_diet(Disease) :-
+    diet(Disease, RecommendedFood, AvoidFood),
+    write('For '), write(Disease), write(', you should eat: '), write(RecommendedFood), nl,
+    write('And avoid: '), write(AvoidFood), nl.
